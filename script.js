@@ -1,6 +1,26 @@
-// Lista de Tareas
+// Lista de Tareas con almacenamiento local
 let tareasPorHacer = []; 
 let tareasTerminadas = []; 
+
+// Cargar tareas desde localStorage
+function cargarTareas() {
+    const tareasPorHacerGuardadas = localStorage.getItem('tareasPorHacer');
+    const tareasTerminadasGuardadas = localStorage.getItem('tareasTerminadas');
+    
+    if (tareasPorHacerGuardadas) {
+        tareasPorHacer = JSON.parse(tareasPorHacerGuardadas);
+    }
+    
+    if (tareasTerminadasGuardadas) {
+        tareasTerminadas = JSON.parse(tareasTerminadasGuardadas);
+    }
+}
+
+// Guardar tareas en localStorage
+function guardarTareas() {
+    localStorage.setItem('tareasPorHacer', JSON.stringify(tareasPorHacer));
+    localStorage.setItem('tareasTerminadas', JSON.stringify(tareasTerminadas));
+}
 
 // Agregar una tarea nueva
 function agregarTarea() {
@@ -15,7 +35,7 @@ function agregarTarea() {
     
     // Objeto nuevo
     const nuevaTarea = {
-        id: Math.random() * 1000,
+        id: Date.now() + Math.random(), // ID más único
         texto: textoTarea,
         fecha: new Date().toLocaleDateString()
     };
@@ -25,7 +45,8 @@ function agregarTarea() {
     // Limpiar formulario
     textarea.value = '';
     
-    // Actualizar
+    // Guardar y actualizar
+    guardarTareas();
     mostrarTareas();
     actualizarContadores();
 }
@@ -38,7 +59,8 @@ function eliminarTarea(id, esCompletada) {
         tareasPorHacer = tareasPorHacer.filter(tarea => tarea.id !== id);
     }
     
-    // Actualizar
+    // Guardar y actualizar
+    guardarTareas();
     mostrarTareas();
     actualizarContadores();
 }
@@ -57,7 +79,8 @@ function toggleTarea(id, esCompletada) {
         tareasPorHacer.splice(tareaIndex, 1);
     }
     
-    // Actualizar
+    // Guardar y actualizar
+    guardarTareas();
     mostrarTareas();
     actualizarContadores();
 }
@@ -137,8 +160,27 @@ function actualizarFecha() {
     header.textContent = `Hoy es ${fechaTexto} y son las ${hora}`;
 }
 
+// Función para exportar tareas (opcional)
+function exportarTareas() {
+    const datos = {
+        tareasPorHacer: tareasPorHacer,
+        tareasTerminadas: tareasTerminadas,
+        fechaExportacion: new Date().toISOString()
+    };
+    
+    const dataStr = JSON.stringify(datos, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = 'mis-tareas.json';
+    link.click();
+}
+
 // Eventos
 document.addEventListener('DOMContentLoaded', function() {
+    // Cargar tareas guardadas al inicio
+    cargarTareas();
     
     actualizarFecha();
     
