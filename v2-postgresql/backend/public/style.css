@@ -1,42 +1,3 @@
-/*
-* {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-}
-
-body {
-    width: auto;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-section, header, footer {
-    margin: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-li {
-    display: flex;
-}
-
-
-.tarea, .opciones {
-    display: flex;
-    gap: 1rem;
-}
-
-.botones {
-    display: flex;
-    justify-content: space-evenly;
-}
-
-.tarea {
-    width: 20rem;
-}
-*/
-
 * {
     margin: 0px;
     padding: 0px;
@@ -178,6 +139,11 @@ li:last-child {
     line-height: 1.5;
 }
 
+.tarea-completada-texto {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
 .opciones {
     display: flex;
     gap: 1rem;
@@ -222,6 +188,55 @@ footer h4 {
     font-style: italic;
 }
 
+/* Mensajes informativos */
+#mensaje-usuario {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 2rem;
+    border-radius: 8px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    z-index: 1000;
+    max-width: 800px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mensaje-error {
+    background: #f44336;
+    color: white;
+    border: 1px solid #d32f2f;
+}
+
+.mensaje-warning {
+    background: #ff9800;
+    color: white;
+    border: 1px solid #e68900;
+}
+
+/* Indicador de carga */
+#indicador-carga {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 1001;
+    font-size: 18px;
+}
+
+/* Estado vacío */
+.estado-vacio {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     section, header, footer {
@@ -242,9 +257,14 @@ footer h4 {
     .opciones {
         align-self: flex-end;
     }
+    
+    #mensaje-usuario {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
 }
 
-/* Estados vacíos */
+/* Estados vacíos (estáticos) */
 li:only-child {
     text-align: center;
     color: #999;
