@@ -1,99 +1,121 @@
-Ejercicio final Módulo JS
+# Lista de Tareas v2.0
 
-# Mi Lista de Tareas
+Una aplicación web para gestionar tareas diarias, migrada de localStorage a PostgreSQL con backend Node.js.
 
-Una aplicación web simple para organizar mis tareas diarias. Mi primer proyecto usando HTML, CSS y JavaScript.
+## Descripción
 
-## ¿Qué hace?
+Este proyecto representa la evolución de una aplicación de lista de tareas hacia una aplicación web completa con persistencia real de datos. Mantiene la simplicidad del diseño original mientras añade la robustez de una base de datos profesional.
 
-- Puedo escribir tareas nuevas y agregarlas
-- Marco las tareas cuando las termino
-- Elimino las que ya no necesito
-- Se actualiza la fecha y hora automáticamente
+## Estructura del Proyecto
 
-## Cómo JavaScript lo hace funcionar
-
-### 1. Cambia lo que veo en pantalla (DOM)
-
-En lugar de tener que recargar la página cada vez, JavaScript cambia directamente lo que está en el HTML:
-
-```javascript
-// Cuando escribo una tarea nueva, JavaScript la agrega a la lista
-const li = document.createElement('li');
-lista.appendChild(li);
+```
+ejercicioModuloJS/
+├── database/
+│   └── setup-database.sql      # Script de configuración de BD
+├── v1-localStorage/            # Versión original
+├── v2-postgresql/              # Versión con PostgreSQL
+│   └── backend/
+│       ├── package.json
+│       ├── server.js           # Servidor Express.js
+│       ├── test-connection.js
+│       └── public/             # Frontend
+│           ├── index.html
+│           ├── style.css
+│           └── script.js
+└── README.md
 ```
 
-**Lo que aprendí:** JavaScript puede crear elementos HTML nuevos y ponerlos donde yo quiera, sin recargar nada.
+## Stack Tecnológico
 
-### 2. Toma decisiones (Control de flujo)
+**Backend**: Node.js, Express.js, PostgreSQL
+**Frontend**: HTML5, CSS3, JavaScript ES6+
+**Base de Datos**: PostgreSQL 12+
 
-Mi aplicación verifica cosas antes de hacer acciones:
+## Instalación
 
-```javascript
-// Si no escribí nada, me avisa
-if (textoTarea === '') {
-    alert('Por favor escribe una tarea antes de agregar');
-    return; 
-}
+### 1. Base de Datos
 
-// Decide si la tarea va a "Por hacer" o "Terminadas"
-if (esCompletada) {
-    // La mueve a terminadas
-} else {
-    // La mantiene en por hacer
-}
+```sql
+-- En PostgreSQL
+CREATE DATABASE lista_tareas;
 ```
 
-**Lo que aprendí:** Con `if/else` puedo hacer que mi aplicación tome decisiones automáticamente.
+Ejecutar `database/setup-database.sql` en la base de datos creada.
 
-### 3. Guarda mis tareas (Estructuras de datos)
+### 2. Backend
 
-Uso dos listas para organizar mis tareas:
+```bash
+cd v2-postgresql/backend
+npm install
 
-```javascript
-let tareasPorHacer = [];     // Lista de tareas pendientes
-let tareasTerminadas = [];   // Lista de tareas completadas
+# Configurar variables de entorno
+cp .env.example .env
+# Editar .env con credenciales de PostgreSQL
 
-// Cada tarea es un objeto con información
-const nuevaTarea = {
-    id: Math.random() * 1000,
-    texto: textoTarea,
-    fecha: new Date().toLocaleDateString()
-};
+# Probar conexión
+npm run test
+
+# Iniciar aplicación
+npm run dev
 ```
 
-**Lo que aprendí:** Los arrays me permiten guardar muchas tareas, y los objetos me ayudan a organizar la información de cada una.
+### 3. Variables de Entorno
 
-### 4. Responde a mis clics (Eventos)
+Crear `.env` en `v2-postgresql/backend/`:
 
-JavaScript "escucha" cuando hago clic en botones o escribo:
-
-```javascript
-// Cuando envío el formulario
-formulario.addEventListener('submit', function(evento) {
-    evento.preventDefault();  // Evita que se recargue la página
-    agregarTarea();          // Ejecuta mi función
-});
+```env
+PORT=3000
+NODE_ENV=development
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=lista_tareas
+DB_USER=postgres
+DB_PASSWORD=tu_password
 ```
 
-**Lo que aprendí:** Con eventos puedo hacer que mi aplicación reaccione a lo que hago (clics, escribir, etc.).
+## Uso
 
-## Las funciones principales que creé
+La aplicación estará disponible en `http://localhost:3000`
 
-**`agregarTarea()`**: Toma lo que escribí, lo valida, y crea una tarea nueva.
+### API Endpoints
 
-**`eliminarTarea()`**: Busca una tarea por su ID y la elimina de la lista.
+- `GET /api/health` - Estado del servidor
+- `GET /api/tareas` - Obtener tareas
+- `POST /api/tareas` - Crear tarea
+- `PUT /api/tareas/:id` - Actualizar tarea
+- `DELETE /api/tareas/:id` - Eliminar tarea
 
-**`toggleTarea()`**: Mueve tareas entre "Por hacer" y "Terminadas".
+### Scripts
 
-**`mostrarTareas()`**: Actualiza lo que veo en pantalla con las tareas actuales.
+- `npm run dev` - Modo desarrollo
+- `npm start` - Modo producción
+- `npm run test` - Probar conexión BD
 
-## Archivos del proyecto
+## Base de Datos
 
-- `index.html`
-- `style.css`
-- `script.js`
+### Tabla `tareas`
 
-## Cómo usarlo
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| id | SERIAL | Identificador único |
+| texto | VARCHAR(500) | Contenido de la tarea |
+| completada | BOOLEAN | Estado |
+| fecha_creacion | TIMESTAMP | Fecha de creación |
+| fecha_actualizacion | TIMESTAMP | Última actualización |
 
-Solo abrir `index.html` en el navegador y empezar a escribir tareas.
+## Funcionalidades
+
+- Crear, editar y eliminar tareas
+- Marcar como completadas/pendientes
+- Contadores automáticos
+- Actualizaciones en tiempo real
+- Persistencia en PostgreSQL
+
+## Comparación de Versiones
+
+| Característica | v1.0 localStorage | v2.0 PostgreSQL |
+|----------------|-------------------|-----------------|
+| Persistencia | Solo local | Base de datos |
+| Escalabilidad | 1 usuario | Múltiples usuarios |
+| Sincronización | No | Sí |
+| Backup | Manual | Automático |
